@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import {Map} from 'mapbox-gl';
+import {Map, Popup, Marker} from 'mapbox-gl';
 import { PlacesService } from '../../services';
 
 @Component({
@@ -38,6 +38,16 @@ export class MapViewComponent implements OnInit, AfterViewInit {
       map.setFog({}); // Set the default atmosphere style
       });
     
+      const popup = new Popup()
+      .setHTML(`
+        <h6>Aqui estoy</h6>
+        <span>Estoy en este lugar del mundo</span>
+      `);
+
+      new Marker({color: 'red'})
+        .setLngLat( this.placesService.userLocation )
+        .setPopup( popup )
+        .addTo( map )
   }
 
   ngOnInit(): void {
