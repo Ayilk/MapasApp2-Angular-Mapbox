@@ -42,6 +42,8 @@ export class SearchResultsComponent implements OnInit {
   getRouteBetweenPoints( place: Feature){
     if(!this.placeService.userLocation ) throw Error("No hay userLocation");
 
+    this.placeService.deletePlaces();
+
     const start = this.placeService.userLocation!;
     const end = place.center as [number, number];
 

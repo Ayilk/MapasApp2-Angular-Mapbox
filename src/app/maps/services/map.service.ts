@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LngLatBounds, LngLatLike, Map, Marker, Popup } from 'mapbox-gl';
+import { AnySourceData, LngLatBounds, LngLatLike, Map, Marker, Popup } from 'mapbox-gl';
 import { DirectionsApiClient } from '../api';
 import { DirectionsResponse, Route } from '../interfaces/directions';
 import { Feature } from '../interfaces/places';
@@ -105,7 +105,50 @@ export class MapService {
     this.map?.fitBounds( bounds, {
       padding: 200
     })
+
+    //Polyline : 
+    //Se define el source, se añade al mapa y se configura  
+    const sourceData: AnySourceData = {
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features: [
+          {
+            type: 'Feature',
+            properties: {},
+            geometry:{
+              type: 'LineString',
+              coordinates: coords
+            }
+            
+          }
+        ]
+      }
+    }
+    //Todo: limpiar ruta previa
+    if(this.map.getLayer('RouteString')){
+      this.map.removeLayer('RouteString');
+      this.map.removeSource('RouteString');
+    }
+  
+  //Aqui añadimos el linestrng con el nombre que queremos, en este caso "RouteString"
+    this.map.addSource('RouteString', sourceData);
+    //Hay que definirle el color y como queremos que luzca
+    this.map.addLayer({
+      id: 'RouteString',
+      type: 'line',
+      source: 'RouteString',
+      layout: {
+        'line-cap': 'round',
+        'line-join': 'round',
+      },
+      paint: {
+        'line-color': 'black',
+        'line-width': 3
+      }
+    })
   }
+
 
   constructor(private directionsApi: DirectionsApiClient) { }
 }
