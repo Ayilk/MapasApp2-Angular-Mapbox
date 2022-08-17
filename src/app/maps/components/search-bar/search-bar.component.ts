@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PlacesService } from '../../services/places.service';
 
 @Component({
   selector: 'app-search-bar',
@@ -25,7 +26,7 @@ export class SearchBarComponent implements OnInit {
   //Tambien lo definimos en el tsconfig.json
   private debounceTimer?: NodeJS.Timeout;
 
-  constructor() { }
+  constructor(private placesService: PlacesService) { }
 
   onQueryChanged( query: string = ''){
    // console.log( query )
@@ -37,6 +38,7 @@ export class SearchBarComponent implements OnInit {
     //solo el ultimo se mantiene, despues de un segundo es que se emite el query
     this.debounceTimer = setTimeout(() => {
       console.log("Mandar este query:", query);
+      this.placesService.getPlacesByQuery( query ); 
     }, 350)
 
   }
