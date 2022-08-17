@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LngLatLike, Map, Marker, Popup } from 'mapbox-gl';
+import { LngLatBounds, LngLatLike, Map, Marker, Popup } from 'mapbox-gl';
 import { Feature } from '../interfaces/places';
 
 @Injectable({
@@ -34,7 +34,7 @@ export class MapService {
     //Con este metodo vamos a poder mover nuestro mapa a cualquier lugar desde nuestro servicio
   }
 
-  createMarkersFromPlaces( places: Feature[]){
+  createMarkersFromPlaces( places: Feature[], userLocation: [number, number]){
     //Evaluamos si tenemos un mapa
     if(!this.map) throw Error ("Mapa no inicializado");
 
@@ -58,6 +58,24 @@ export class MapService {
         newMarkers.push( newMarker );
     }
     this.markers = newMarkers;
+
+    //Si ya no hay marcadores no tiene sentido lo demas
+    if( places.length === 0 ) return;
+
+    //Limites del mapa
+    //Espera un objeto de tipo lng lat
+    //const bounds = new LngLatBounds(
+      //Pide mas de uno. Definir un arreglo de pares de coordenadas
+      // this.markers[0].getLngLat(),
+      // this.markers[0].getLngLat(),      
+      //);
+      const bounds = new LngLatBounds();
+      newMarkers.forEach( marker => bounds.extend( marker.getLngLat() ) );
+      bounds.extend( userLocation );
+   // bounds.extend()
+    this.map.fitBounds(bounds, {
+      padding: 200
+    })
   }
   constructor() { }
 }
