@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PlacesApiClient } from '../api';
 import { Feature, PlacesResponse } from '../interfaces/places';
+import { MapService } from './map.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,8 @@ export class PlacesService {
 
   //Una vez que creamos nuestro http personalizado, injectamos ese placesApiClient
   //constructor(private http: HttpClient) { 
-    constructor(private placesApi: PlacesApiClient) { 
+    constructor(private placesApi: PlacesApiClient,
+                private mapService: MapService) { 
     //Mandamos a llamar el getUserLocation tan pronto algun lugar usa nuestros servicios
     //Y solo se va a mandar a llamar una unica vez
     this.getUserLocation();
@@ -71,6 +73,8 @@ export class PlacesService {
 
         this.isLoadingPlaces = false;
         this.places = resp.features;
+
+        this.mapService.createMarkersFromPlaces( this.places );
       })
   }
 }
