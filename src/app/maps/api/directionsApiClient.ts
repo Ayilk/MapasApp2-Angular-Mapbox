@@ -9,7 +9,7 @@ import { environment } from "src/environments/environment";
 })
 
 export class DirectionsApiClient extends HttpClient{
-    public baseUrl: string = 'https://api.mapbox.com/directions/v5/mapbox/driving/geocoding/v5/mapbox.places';
+    public baseUrl: string = 'https://api.mapbox.com/directions/v5/mapbox/driving';
 
     constructor( handler : HttpHandler ) {
         super(handler);
@@ -25,8 +25,8 @@ export class DirectionsApiClient extends HttpClient{
                 geometries: 'geojson',
                 language: 'es',
                 overview: 'simplified',
-                steps: true,
-                acces_token: environment.apiKey
+                steps: false,
+                access_token: environment.apiKey
             }
         } );
     }

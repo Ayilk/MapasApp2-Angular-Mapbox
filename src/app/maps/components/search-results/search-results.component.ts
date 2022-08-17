@@ -38,6 +38,16 @@ export class SearchResultsComponent implements OnInit {
     this.mapService.flyTo([lng, lat])
   }
 
+  
+  getRouteBetweenPoints( place: Feature){
+    if(!this.placeService.userLocation ) throw Error("No hay userLocation");
+
+    const start = this.placeService.userLocation!;
+    const end = place.center as [number, number];
+
+    this.mapService.getRouteBetweenPoints(start, end)
+  }
+
   ngOnInit(): void {
   }
 
