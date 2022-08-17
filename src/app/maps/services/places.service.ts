@@ -51,6 +51,11 @@ export class PlacesService {
 
   getPlacesByQuery( query: string = ''){
     //Evaluamos cuando si el string es nulo
+    if( query.length === 0 ){
+      this.isLoadingPlaces = false;
+      this.places = [];
+      return;
+    }
 
     if(!this.userLocation) throw Error("No hay userLocation");
 
