@@ -19,8 +19,27 @@ import { Component, OnInit } from '@angular/core';
   ]
 })
 export class SearchBarComponent implements OnInit {
+  //El timer que voy implementar para esperarme y ahi emitir el valor
+  //Aparece un error en donde no se logra encontrar el namespace de NodeJS
+  //Para eso lo escribimo de manera manual en tsconfiig.app.js y dentro de los types escribimos "node"
+  //Tambien lo definimos en el tsconfig.json
+  private debounceTimer?: NodeJS.Timeout;
 
   constructor() { }
+
+  onQueryChanged( query: string = ''){
+   // console.log( query )
+
+   //Cada que recibimos un nuevo valor de query que cambio, vamos a evaluar y limpiarlo
+    if(this.debounceTimer ) clearTimeout( this.debounceTimer )
+
+    //Cada que escribimos en la caja de texto, la instruccion se ejecuta y se limpi, se ejecuta y se limpia
+    //solo el ultimo se mantiene, despues de un segundo es que se emite el query
+    this.debounceTimer = setTimeout(() => {
+      console.log("Mandar este query:", query);
+    }, 350)
+
+  }
 
   ngOnInit(): void {
   }

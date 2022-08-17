@@ -4,7 +4,11 @@
     <input type="text"
            class="form-control"
            placeholder="Buscar lugar..."
+           #txtQuery
+           (keyup)="onQueryChanged(txtQuery.value)"
     >
+
+    <!-- #txtQuery Este serála referencial local al query de busqueda -->
 
     <app-search-results></app-search-results>
 
