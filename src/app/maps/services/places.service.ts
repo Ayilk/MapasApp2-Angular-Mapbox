@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { PlacesApiClient } from '../api';
 import { Feature, PlacesResponse } from '../interfaces/places';
 
 @Injectable({
@@ -17,7 +18,10 @@ export class PlacesService {
     // !!this.userLocation Negamos que no haya un valor en el userLocation
     return !!this.userLocation;
   }
-  constructor(private http: HttpClient) { 
+
+  //Una vez que creamos nuestro http personalizado, injectamos ese placesApiClient
+  //constructor(private http: HttpClient) { 
+    constructor(private placesApi: PlacesApiClient) { 
     //Mandamos a llamar el getUserLocation tan pronto algun lugar usa nuestros servicios
     //Y solo se va a mandar a llamar una unica vez
     this.getUserLocation();
@@ -33,6 +37,7 @@ export class PlacesService {
       navigator.geolocation.getCurrentPosition(
         ( {coords}) => {
           this.userLocation = [coords.longitude, coords.latitude];
+          console.log( this.userLocation)
           resolve( this.userLocation );
         },
         ( err ) => {
@@ -47,9 +52,15 @@ export class PlacesService {
   getPlacesByQuery( query: string = ''){
     //Evaluamos cuando si el string es nulo
 
+    if(!this.userLocation) throw Error("No hay userLocation");
+
     this.isLoadingPlaces = true;
 
-    this.http.get<PlacesResponse>(`https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?proximity=-99.17552331098469%2C19.669855610838624&language=es&access_token=pk.eyJ1IjoiYXlpbGsiLCJhIjoiY2w2d3RwNnliMmw1azNvcnFwZWt1aTZzNCJ9.JkVfzgh5lWDorbqCez1ltg`)
+    this.placesApi.get<PlacesResponse>(`/${query}.json`, {
+      params: {
+        proximity: this.userLocation?.join(',')
+      }
+    })
       .subscribe(resp => {
         console.log( resp.features)
 
