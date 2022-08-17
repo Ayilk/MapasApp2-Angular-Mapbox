@@ -4,6 +4,13 @@
 <app-loading *ngIf="!isUserLocationReady; else mapReady"></app-loading>
 
 <ng-template #mapReady>
+    
     <app-map-view></app-map-view>
+
+    <!-- Hasta que tenga la geolocalización lista es que voy a mostrar el boton -->
+    <app-btn-my-location></app-btn-my-location>
+
 </ng-template>
+
+<app-angular-logo></app-angular-logo>
 
